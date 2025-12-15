@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pH14 - Redefining Precision</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0A0A0A;
+            --white: #FAFAFA;
+            --accent: #5C1F1F;
+            --gold: linear-gradient(135deg, #D4AF37 0%, #F4E5B8 50%, #D4AF37 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav.scrolled {
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 4rem;
+            box-shadow: 0 2px 40px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--black);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--black);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.6;
+        }
+
+        .cta-button {
+            background: var(--black);
+            color: var(--white);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            cursor: pointer;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%);
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-size: 7rem;
+            font-weight: 300;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .hero h1 span {
+            display: block;
+            background: var(--gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 400;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: #666;
+            margin-bottom: 3rem;
+        }
+
+        .floating-pen {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            opacity: 0;
+            animation: floatIn 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+            pointer-events: none;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 2px;
+            height: 50px;
+            background: var(--black);
+            margin: 0 auto 0.5rem;
+            animation: scrollDown 2s ease-in-out infinite;
+        }
+
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 4rem;
+            position: relative;
+        }
+
+        .dual-function {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .dual-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8rem;
+            align-items: center;
+        }
+
+        .dual-text h2 {
+            font-size: 4.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+
+        .dual-text p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #999;
+            font-weight: 300;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .feature-item {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-item h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .colors-section {
+            background: var(--white);
+            padding: 10rem 4rem;
+        }
+
+        .colors-header {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .colors-header h2 {
+            font-size: 4.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .colors-header p {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 4rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .color-card {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .color-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .color-card-inner {
+            background: #F5F5F5;
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .color-card-inner:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        }
+
+        .color-image {
+            width: 280px;
+            height: 280px;
+            object-fit: contain;
+            margin-bottom: 2rem;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .color-card-inner:hover .color-image {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .color-name {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .color-description {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .lifestyle-section {
+            background: var(--black);
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .lifestyle-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            height: 100vh;
+        }
+
+        .lifestyle-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .lifestyle-image:hover {
+            transform: scale(1.05);
+        }
+
+        .specs-section {
+            background: var(--white);
+            padding: 10rem 4rem;
+        }
+
+        .specs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .specs-header {
+            text-align: center;
+            margin-bottom: 6rem;
+        }
+
+        .specs-header h2 {
+            font-size: 4.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+        }
+
+        .spec-item {
+            text-align: center;
+            padding: 3rem;
+            background: #F5F5F5;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .spec-item:hover {
+            transform: translateY(-10px);
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .spec-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-item h3 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .spec-item p {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .spec-item:hover p {
+            color: #999;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--black) 0%, #1a1a1a 100%);
+            color: var(--white);
+            text-align: center;
+            padding: 10rem 4rem;
+        }
+
+        .cta-section h2 {
+            font-size: 5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            color: #999;
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .primary-button {
+            background: var(--white);
+            color: var(--black);
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .primary-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(255,255,255,0.2);
+        }
+
+        .secondary-button {
+            background: transparent;
+            color: var(--white);
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            border: 2px solid var(--white);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary-button:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 4rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) rotate(-30deg) scale(0.8);
+            }
+            to {
+                opacity: 0.15;
+                transform: translate(-50%, -50%) rotate(-30deg) scale(1);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scrollDown {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .dual-content,
+            .lifestyle-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .color-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav {
+                padding: 1.5rem 2rem;
+            }
+
+            .section {
+                padding: 4rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="logo">pH14</div>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#colors">Colors</a>
+            <a href="#specs">Specs</a>
+            <button class="cta-button" onclick="window.open('https://ph14-online.myshopify.com/', '_blank')">Shop Now</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Write.<br><span>Highlight.</span></h1>
+            <p class="hero-subtitle">ONE INSTRUMENT. INFINITE POSSIBILITIES.</p>
+            <button class="cta-button" onclick="window.open('https://ph14-online.myshopify.com/', '_blank')">Discover pH14</button>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+            <small style="font-size: 0.75rem; letter-spacing: 0.1em;">SCROLL</small>
+        </div>
+    </section>
+
+    <section class="section dual-function" id="features">
+        <div class="dual-content">
+            <div class="dual-text">
+                <h2>Dual Functionality<br>Redefined</h2>
+                <p>pH14 seamlessly integrates precision ballpoint writing with vibrant fluorescent highlighting in one elegant instrument. No caps to lose, no tools to switch. Just effortless transition between tasks.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h3>✦ Precision Writing</h3>
+                        <p>Smooth ballpoint ink flow for detailed work and everyday notes</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>✦ Vibrant Highlighting</h3>
+                        <p>Fluorescent tip for bold, clear emphasis</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>✦ Ergonomic Design</h3>
+                        <p>Premium grip and balanced weight for extended comfort</p>
+                    </div>
+                    <div class="feature-item">
+                        <h3>✦ Laser Engraving</h3>
+                        <p>Meticulous branding on metallic finishes</p>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <img src="./features.png" alt="pH14 Features" style="width: 100%; border-radius: 20px;">
+            </div>
+        </div>
+    </section>
+
+    <section class="colors-section" id="colors">
+        <div class="colors-header">
+            <h2>Choose Your Finish</h2>
+            <p>Premium metallic finishes designed to complement your style</p>
+        </div>
+        
+        <div class="color-grid">
+            <div class="color-card">
+                <div class="color-card-inner">
+                    <img src="./silver.png" alt="Silver pH14" class="color-image">
+                    <h3 class="color-name">Silver</h3>
+                    <p class="color-description">Brushed metallic elegance</p>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <div class="color-card-inner">
+                    <img src="./gold.png" alt="Gold pH14" class="color-image">
+                    <h3 class="color-name">Gold</h3>
+                    <p class="color-description">Premium brushed gold finish</p>
+                </div>
+            </div>
+
+            <div class="color-card">
+                <div class="color-card-inner">
+                    <img src="./black.png" alt="Black pH14" class="color-image">
+                    <h3 class="color-name">Matte Black</h3>
+                    <p class="color-description">Timeless sophistication</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="lifestyle-section">
+        <div class="lifestyle-grid">
+            <div style="overflow: hidden;">
+                <img src="./lifestyle1.png" alt="pH14 Lifestyle" class="lifestyle-image">
+            </div>
+            <div style="overflow: hidden;">
+                <img src="./lifestyle2.png" alt="pH14 Lifestyle" class="lifestyle-image">
+            </div>
+            <div style="overflow: hidden;">
+                <img src="./lifestyle3.png" alt="pH14 Lifestyle" class="lifestyle-image">
+            </div>
+            <div style="overflow: hidden;">
+                <img src="./lifestyle4.png" alt="pH14 Lifestyle" class="lifestyle-image">
+            </div>
+        </div>
+    </section>
+
+    <section class="specs-section" id="specs">
+        <div class="specs-container">
+            <div class="specs-header">
+                <h2>Engineering Excellence</h2>
+            </div>
+            
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <div class="spec-icon">◇</div>
+                    <h3>Premium Materials</h3>
+                    <p>Brushed metallic finishes with ergonomic matte grip for all-day comfort</p>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-icon">◆</div>
+                    <h3>Dual Ink System</h3>
+                    <p>Precision ballpoint and vibrant fluorescent highlighter in one seamless instrument</p>
+                </div>
+                
+                <div class="spec-item">
+                    <div class="spec-icon">◇</div>
+                    <h3>Integrated Clip</h3>
+                    <p>Hexagonal clip design with premium finish complements the metallic body</p>
+                </div>
+
+                <div class="spec-item">
+                    <div class="spec-icon">◆</div>
+                    <h3>Laser Engraved</h3>
+                    <p>Meticulous pH14 branding etched with precision on metallic surfaces</p>
+                </div>
+
+                <div class="spec-item">
+                    <div class="spec-icon">◇</div>
+                    <h3>Balanced Design</h3>
+                    <p>Optimized weight distribution for effortless extended writing sessions</p>
+                </div>
+
+                <div class="spec-item">
+                    <div class="spec-icon">◆</div>
+                    <h3>Multi-Purpose</h3>
+                    <p>Perfect for professionals, students, artists, and creative minds</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Ready to Experience<br>pH14?</h2>
+        <p>Join those who demand more from their tools</p>
+        <div class="cta-buttons">
+            <a href="https://ph14-online.myshopify.com/" target="_blank" class="primary-button">Shop Collection</a>
+            <a href="#colors" class="secondary-button">View All Colors</a>
+        </div>
+    </section>
+
+    <footer>
+        <p style="letter-spacing: 0.2em; margin-bottom: 1rem;">pH14</p>
+        <p>© 2024 pH14. Precision Redefined.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll animation observer
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animatable elements
+        document.querySelectorAll('.feature-item, .color-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
